@@ -1,0 +1,399 @@
+gateway:
+  paths:
+
+    # BILLING
+    - path: ^/offer$
+      method:
+        - GET
+      host: billing
+      port: 3008
+      protocol: http
+      auth: false
+
+    - path: ^/subscription$
+      method:
+        - GET
+      host: billing
+      port: 3008
+      protocol: http
+      auth: true
+
+    - path: ^/create-checkout-session$
+      method:
+        - POST
+      host: billing
+      port: 3008
+      protocol: http
+      auth: true
+
+    - path: ^/create-portal-session$
+      method:
+        - GET
+      host: billing
+      port: 3008
+      protocol: http
+      auth: true
+
+    - path: ^/stripe-webhook$
+      method:
+        - POST
+      host: billing
+      port: 3008
+      protocol: http
+      auth: false
+
+    # A RETIRER
+    - path: ^/billing/event$
+      method:
+        - POST
+      host: billing
+      port: 3008
+      protocol: http
+      auth: true
+
+    - path: ^/usage/workspace$
+      method:
+        - POST
+      host: billing
+      port: 3008
+      protocol: http
+      auth: true
+
+    - path: ^/usage/user$
+      method:
+        - POST
+      host: billing
+      port: 3008
+      protocol: http
+      auth: true
+
+    # IAM
+    - path: ^/login$
+      method:
+        - POST
+      host: iam
+      port: 3000
+      protocol: http
+      auth: false
+
+    - path: ^/register$
+      method:
+        - POST
+      host: iam
+      port: 3000
+      protocol: http
+      auth: false
+
+    - path: ^/users/.*$
+      method:
+        - GET
+      host: iam
+      port: 3000
+      protocol: http
+      auth: true
+
+    - path: ^/user$
+      method:
+        - GET
+      host: iam
+      port: 3000
+      protocol: http
+      auth: true
+
+    - path: ^/access$
+      method:
+        - POST
+      host: iam
+      port: 3000
+      protocol: http
+      auth: true
+
+
+    # WORKSPACE
+    - path: ^/workspace$
+      method:
+        - GET
+        - POST
+      host: workspace
+      port: 3002
+      protocol: http
+      auth: true
+      accessRule:
+        - method: POST
+          resource: workspace
+
+    - path: ^/workspace/[0-9]*$
+      method:
+        - GET
+        - PUT
+        - DELETE
+      host: workspace
+      port: 3002
+      protocol: http
+      auth: true
+
+    # INVITATIONS
+    - path: ^/invitation/status/([a-zA-Z]*)?$
+      method:
+        - GET
+      host: workspace
+      port: 3002
+      protocol: http
+      auth: true
+
+    - path: ^/invitation$
+      method:
+        - POST
+        - GET
+      host: workspace
+      port: 3002
+      protocol: http
+      auth: true
+
+    - path: ^/invitation/[0-9]*$
+      method:
+        - GET
+        - PUT
+        - DELETE
+      host: workspace
+      port: 3002
+      protocol: http
+      auth: true
+
+    # DOCUMENT
+    - path: ^/document$
+      method:
+        - POST
+        - GET
+      host: document
+      port: 3001
+      protocol: http
+      auth: true
+      accessRule:
+        - method: POST
+          resource: document
+          additionalFields:
+            - name: workspaceId
+              inRequestValue: WorkspaceId
+
+    - path: ^/document/[0-9]*$
+      method:
+        - DELETE
+      host: document
+      port: 3001
+      protocol: http
+      auth: true
+
+    - path: ^/editor$
+      method:
+        - GET
+      host: document
+      port: 3001
+      protocol: websocket
+      auth: true
+
+    # CHAT
+    - path: ^/chat$
+      method:
+        - GET
+      host: chat
+      port: 3006
+      protocol: websocket
+      auth: true
+
+    - path: ^/chat$
+      method:
+        - GET
+      host: chat
+      port: 3006
+      protocol: http
+      auth: true
+
+    - path: ^/chatroom$
+      method:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      host: chat
+      port: 3006
+      protocol: http
+      auth: true
+
+    # STORAGE
+    - path: ^/file$
+      method:
+        - GET
+        - POST
+      host: storage
+      port: 3007
+      protocol: http
+      auth: true
+      accessRule:
+        - method: POST
+          resource: storage
+          additionalFields:
+            - name: workspaceId
+              inRequestValue: WorkspaceId
+            - name: fileSize
+              inRequestValue: FileSize
+
+    - path: ^/file/[0-9]*$
+      method:
+        - GET
+        - PUT
+        - DELETE
+      host: storage
+      port: 3007
+      protocol: http
+      auth: true
+
+    # NOTIFIER
+    - path: ^/socket.io$
+      method:
+        - GET
+        - POST
+      host: notifier
+      port: 3003
+      protocol: websocket
+      auth: true
+
+    # WEBAPP
+    - path: ^/$
+      method:
+        - GET
+      host: webapp
+      port: 8080
+      protocol: http
+      auth: false
+
+    - path: ^/.*(.html|.css|.js|.png|.jpg|.json|.ico|.txt|.ttf|.woff|.woff2|.svg|.eot)$
+      method:
+        - GET
+      host: webapp
+      port: 8080
+      protocol: http
+      auth: false
+
+    - path: ^/sockjs-node/.*$
+      method:
+        - GET
+        - POST
+      host: webapp
+      port: 8080
+      protocol: http
+      auth: false
+
+    # GAMIFICATION
+    - path: ^/profile/[0-9]+$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile$
+      method:
+        - GET
+        - PUT
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/avatars$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/titles$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/action$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/actions$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/level$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile/avatar$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile/avatars$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile/avatar=[0-9]*$
+      method:
+        - PUT
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile/title$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile/titles$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile/title=[0-9]*$
+      method:
+        - PUT
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
+
+    - path: ^/profile/actions$
+      method:
+        - GET
+      host: gamification
+      port: 3004
+      protocol: http
+      auth: true
